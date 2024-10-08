@@ -1,0 +1,29 @@
+#batalla {
+    display: flex;
+}
+
+img {
+    height: 250px;
+}
+
+#ganador {
+    display: flex;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+#character-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+#character-info img {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+}
