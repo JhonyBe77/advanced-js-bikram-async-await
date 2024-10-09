@@ -141,54 +141,45 @@ async function getRandomCharacter() {
 
 //  8.- Declara una función getRandomCharacterInfo que retorne de un personaje su imagen, nombre, episodios en los que aparece y el nombre del primer episodio en el que aparece + fecha de estreno, tendrás que hacer otro fetch para llegar a los ultimos datos. Formato de retorno => (return {img, name, episodes, firstEpisode, dateEpisode})
 
-async function fungetRandomCharacterInfo() {
-    try {
-        // Reutilizar la función anterior
-        let character = await getRandomCharacter();
-
-
-        let firstEpisodeUrl = character.episode[0];
-        let firstEpisodeResponse = await fetch(firstEpisodeUrl);
-
-        if (!firstEpisodeResponse.ok) {
-            throw new Error(`Error HTTP: ${firstEpisodeResponse.status} - ${firstEpisodeResponse.statusText}`);
+async function getRandomCharacterInfo(){
+    try{
+        let response = await getRandomCharacter();
+        let img = response.image;
+        let name = response.name;
+        let episodes = response.episode; // Array de episodios
+        let episodesLength = episodes.length;
+        let firstEpisodeUrl = response.episode[0]; // https://rickandmortyapi.com/api/episode/1
+        // Ir a la API a buscar fecha del último episodio
+        let response2 = await fetch(firstEpisodeUrl);
+        if (!response2.ok) {
+            throw new Error(`Error HTTP: ${response2.status} - ${response2.statusText}`);
         }
-
-        let firstEpisode = await firstEpisodeResponse.json();
-        return {
-            img: character.image,
-            nombre: character.name,
-            episodios: character.episode.length,
-            primerEpisodio: firstEpisode.name,
-            fechaEpisodio: firstEpisode.air_date
-        };
-
+        let data = await response2.json();
+        let firstEpisode = data.name;
+        let dateEpisode = data.air_date;
+        return {img, name, episodes, firstEpisode, dateEpisode, episodesLength};
     } catch (error) {
-        console.log(`ERROR: ${error.stack}`);
+        // Manejar errores de red o del servidor
+        console.error('Hubo un problema con la solicitud:', error.message);
     }
 }
-
-// datos del personaje en el DOM
+// para pintar los datos del personaje en el DOM
 function displayCharacterInfo(data) {
     const characterInfoDiv = document.getElementById('character-info');
     characterInfoDiv.innerHTML = `
-      <img src="${data.img}" alt="${data.nombre}" />
+      <img src="${data.img}" alt="${data.name}" />
       <div>
-        <h2>${data.nombre}</h2>
-        <p><strong>Episodios en los que aparecen:</strong> ${data.episodios}</p>
-        <p><strong>Primer episodio :</strong> ${data.primerEpisodio}</p>
-        <p><strong>Fecha en el que aparece:</strong> ${data.fechaEpisodio}</p>
-      </div>
-    `;
+        <h2>${data.name}</h2>
+        <p><strong>Episodios en los que aparece:</strong> ${data.episodesLength}</p>
+        <p><strong>Primer episodio:</strong> ${data.firstEpisode}</p>
+        <p><strong>Fecha en el que aparece:</strong> ${data.dateEpisode}</p>
+      </div>`
+    ;
 }
-
-// Asignar evento al botón para obtener y mostrar los datos
+// botón
 document.getElementById('fetch-character').addEventListener('click', async () => {
-    const characterData = await fungetRandomCharacterInfo();
+    const characterData = await getRandomCharacterInfo();
     if (characterData) {
-        displayCharacterInfo(characterData);
+        displayCharacterInfo(characterData);  // Pintar los datos en el DOM
     }
 });
-
-
-
