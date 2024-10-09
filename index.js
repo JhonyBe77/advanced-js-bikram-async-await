@@ -1,156 +1,125 @@
 //DESARROLLA AQUI TUS SOLUCIONES
-// 1.- Declara una función getRandomPokemon que retorne un pokemon aleatorio.
+//DESARROLLA AQUI TUS SOLUCIONES
+//1
+/* async function getRandomPokemon (pokemon){
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/`)
+    let data = await response.json();
+    let n = Math.floor(Math.random() * (data.results).leght)
+    return data.results[n]
+} */
 
 async function getRandomPokemon() {
     try {
         let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${Math.floor(Math.random() * 177)}`)
-
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
 
         let data = await response.json();
-
-        return data;
+        return data
     } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+        console.log(`ERROR: ${error.stack}`);
     }
-
 }
 
-// async function getRandomPokemon(){
-//     let response = await fetch(`https://pokeapi.co/api/v2/pokemon`)
-//     let data = await response.json();
-//     let n = Math.floor(Math.random() * (data.results).length);
-//     // Aplicar el nº random al índice del array de results
+//2
 
-//     console.log(data.results[n])
-// }
-
-
-
-// 2.- Declara una funcion getImageAndName que retorne el nombre y la URL de la imagen de un pokemon => (return {img, name})
 async function getImageAndName() {
     try {
         let response = await fetch(`https://pokeapi.co/api/v2/pokemon/pikachu`)
-
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
-
         let data = await response.json();
         let name = data.name;
         let img = data.sprites.front_default;
         return { name, img }
-
-
-    } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+    }
+    catch (error) {
+        console.log(`ERROR: ${error.stack}`);
     }
 }
 
-// 3.- Declara una funcion printImageAndName que retorne el string necesario para pintar la imagen y el nombre del pokemon en el DOM de la siguiente forma:
+//3
+
 async function printImageAndName() {
     try {
         let data = await getImageAndName();
-        // Aquí no ponemos if(!response.ok) porque ya viene de la otra función donde se ha hecho
-        return ` 
-        <section>
-            <img src="${data.img}" alt="Imagen de ${data.name}">
-            <h1>${data.name}</h1>
-        </section>`
-    } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+        return `<section>
+                    <img src="${data.img}"
+                    alt="nombre del pokemon ${data.name}">
+                    <h1>${data.name}</h1>
+                </section>`
     }
+    catch (error) {
+        console.log(`ERROR: ${error.stack}`);
 
-
-    // document.body.innerHTML +=
-    // `<section>
-    //     <img src="url de imagen" alt="nombre del pokemon">
-    //     <h1>Nombre del pokemon</h1>
-    // </section>`;
-
+    }
 }
 
-// 4.- Declara una función getRandomDogImage que retorne la url de la imagen de un perro aleatorio
+//4
 
 async function getRandomDogImage() {
     try {
-        let response = await fetch("https://dog.ceo/api/breeds/image/random");
-
+        let response = await fetch(`https://dog.ceo/api/breeds/image/random`);
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
         }
-
         let data = await response.json();
         return data.message;
-
-    } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+    }
+    catch (error) {
+        console.log(`ERROR: ${error.stack}`);
     }
 }
 
-// 5.- Declara una función getRandomPokemonImage que retorne la url de la imagen de un pokemon aleatorio.
+//5
+
 async function getRandomPokemonImage() {
     try {
         let response = getRandomPokemon();
         let data = await response;
         return data.sprites.front_default;
-    } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
     }
-    
- 
+    catch (error) {
+        console.log(`ERROR: ${error.stack}`);
+    }
 }
+//6
 
-// 6.- Declara una función printPugVsPikachu que pinte la batalla entre "Pug" y "Pikachu" (no se testea)
 async function printPugVsPikachu() {
     try {
-        let pug = await fetch("https://dog.ceo/api/breed/pug/images/random");
-
-        if (!pug.ok) {
-            throw new Error(`Error HTTP: ${pug.status} - ${pug.statusText}`);
-        }
-        
+        let pug = await fetch(`https://dog.ceo/api/breed/pug/images/random`);
         let pikachu = await getImageAndName();
-
         let dataPug = await pug.json();
-
-        let arrayUrls = [dataPug.message, "https://www.freepnglogos.com/uploads/vs-png/vs-fire-icon-png-logo-Image-10.png", pikachu.img];
-
+        /*let urlPug = dataPug.message;
+        let urlPikachu = pikachu.img
+        let urVs = "https://www.freepnglogos.com/uploads/vs-png/vs-fire-icon-png-logo-Image-10.png"
+        */
         let divBatalla = document.querySelector("#batalla");
+        let arrayUrl = [dataPug.message, "https://www.freepnglogos.com/uploads/vs-png/vs-fire-icon-png-logo-Image-10.png", pikachu.img]
+        for (let i = 0; i < arrayUrl.length; i++) {
 
-        // Recorrer el array, crear "img" en HTML y meter el src de cada una
-        for(let i = 0; i < arrayUrls.length; i++){
             let img = document.createElement("img");
-            img.src = arrayUrls[i];
+            img.src = arrayUrl[i];
             divBatalla.appendChild(img);
         }
-
-        let ganador = document.querySelector("#ganador");
-        let random = Math.floor(Math.random() * 2)
-
-        random === 1 
+        let ganador = document.querySelector("#ganador")
+        let random = Math.floor(Math.random() * 2);
+        random === 1
             ? ganador.textContent = "GANA EL PUG"
-            : ganador.textContent = "GANA PIKACHU"
-
-        // Figure
-
+            : ganador.textContent = "GANA EL PIKACHU"
     } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+        console.log(`ERROR: ${error.stack}`)
+
     }
 }
 printPugVsPikachu()
 
+
 // 7.- Declara una función getRandomCharacter que retorne un personaje aleatorio.
 
-async function getRandomCharacter(){
+async function getRandomCharacter() {
     try {
         let response = await fetch("https://rickandmortyapi.com/api/character")
 
@@ -172,59 +141,54 @@ async function getRandomCharacter(){
 
 //  8.- Declara una función getRandomCharacterInfo que retorne de un personaje su imagen, nombre, episodios en los que aparece y el nombre del primer episodio en el que aparece + fecha de estreno, tendrás que hacer otro fetch para llegar a los ultimos datos. Formato de retorno => (return {img, name, episodes, firstEpisode, dateEpisode})
 
-async function getRandomCharacterInfo(){
-    try{
-        let response = await getRandomCharacter();
-        
-        let img = response.image;
-        let name = response.name;
-        let episodes = response.episode;
-        let firstEpisode = episodes[0]; // https://rickandmortyapi.com/api/episode/1
+async function fungetRandomCharacterInfo() {
+    try {
+        // Reutilizar la función anterior
+        let character = await getRandomCharacter();
 
 
-        // Ir a la API a buscar fecha del último episodio
-        let response2 = await fetch(firstEpisode);
-        
-        if (!response2.ok) {
-            throw new Error(`Error HTTP: ${response2.status} - ${response2.statusText}`);
+        let firstEpisodeUrl = character.episode[0];
+        let firstEpisodeResponse = await fetch(firstEpisodeUrl);
+
+        if (!firstEpisodeResponse.ok) {
+            throw new Error(`Error HTTP: ${firstEpisodeResponse.status} - ${firstEpisodeResponse.statusText}`);
         }
 
-        let data = await response2.json();
-
-        let dateEpisode = data.air_date;
-        console.log(
-            `img: ${img}
-            name: ${name}
-            episodes: ${episodes}
-            firstEpisode: ${firstEpisode}
-            dateEpisode: ${dateEpisode}
-            `)
-        return {img, name, episodes, firstEpisode, dateEpisode};
+        let firstEpisode = await firstEpisodeResponse.json();
+        return {
+            img: character.image,
+            nombre: character.name,
+            episodios: character.episode.length,
+            primerEpisodio: firstEpisode.name,
+            fechaEpisodio: firstEpisode.air_date
+        };
 
     } catch (error) {
-        // Manejar errores de red o del servidor
-        console.error('Hubo un problema con la solicitud:', error.message);
+        console.log(`ERROR: ${error.stack}`);
     }
-    
 }
-// para pintar los datos del personaje en el DOM
+
+// datos del personaje en el DOM
 function displayCharacterInfo(data) {
     const characterInfoDiv = document.getElementById('character-info');
     characterInfoDiv.innerHTML = `
-      <img src="${data.img}" alt="${data.name}" />
+      <img src="${data.img}" alt="${data.nombre}" />
       <div>
-        <h2>${data.name}</h2>
-        <p><strong>Episodios en los que aparece:</strong> ${data.episodes}</p>
-        <p><strong>Primer episodio:</strong> ${data.firstEpisode}</p>
-        <p><strong>Fecha en el que aparece:</strong> ${data.dateEpisode}</p>
+        <h2>${data.nombre}</h2>
+        <p><strong>Episodios en los que aparecen:</strong> ${data.episodios}</p>
+        <p><strong>Primer episodio :</strong> ${data.primerEpisodio}</p>
+        <p><strong>Fecha en el que aparece:</strong> ${data.fechaEpisodio}</p>
       </div>
     `;
 }
 
-// botón 
+// Asignar evento al botón para obtener y mostrar los datos
 document.getElementById('fetch-character').addEventListener('click', async () => {
-    const characterData = await getRandomCharacterInfo();
+    const characterData = await fungetRandomCharacterInfo();
     if (characterData) {
-        displayCharacterInfo(characterData);  // Pintar los datos en el DOM
+        displayCharacterInfo(characterData);
     }
 });
+
+
+
